@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>>Taco Cloud</title>
+</head>
+<body>
+<h1>Order your taco creations</h1>
+</br>
+<img th:src="@{images/TacoCloud.png}"/>
+</br>
+<a th:href="@{/design}">Add new design!</a>
+<!--when we post,action will tell as where we should post from,in case of this controller we go back one step from /orders/current to /orders-->
+<form method="post" th:action="@{/orders}" th:object="${order}">
+    <h3>Deliver my taco master peace to:</h3>
+    <label for="name">Name: </label>
+    <input type="text" th:field="*{name}">
+    </br>
+    <label for="streetAddress">StreetAddress: </label>
+    <input type="text" th:field="*{streetAddress}">
+    </br>
+
+    <label for="city">City: </label>
+    <input type="text" th:field="*{city}">
+    </br>
+
+    <label for="state">State: </label>
+    <input type="text" th:field="*{state}">
+    </br>
+
+    <label for="zip">Zip: </label>
+    <input type="text" th:field="*{zip}">
+    </br>
+
+    <label for="creditCard">CreditCard: </label>
+    <input type="text" th:field="*{creditCard}">
+    </br>
+
+    <label for="expiration">Expiration: </label>
+    <input type="text" th:field="*{expiration}">
+    </br>
+
+    <label for="cvv">Cvv: </label>
+    <input type="text" th:field="*{cvv}">
+    </br>
+
+    <input type="submit" value="Submit order">
+    </br>
+
+</form>
+</body>
+</html>
