@@ -1,44 +1,45 @@
 package com.example.tacocloud.controllers;
 
 import com.example.tacocloud.models.Ingredient;
+import com.example.tacocloud.models.Order;
 import com.example.tacocloud.models.Taco;
+import com.example.tacocloud.repositories.JdbcIngredientRepository;
+import com.example.tacocloud.repositories.JdbcTacoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
 @RequestMapping("/design")
+@SessionAttributes(names = "order")
 public class DesignTacoController {
+    private JdbcIngredientRepository ingredientRepository;
+    private JdbcTacoRepository tacoRepository;
+
+    @Autowired
+    public DesignTacoController(JdbcIngredientRepository ingredientRepository, JdbcTacoRepository tacoRepository) {
+        this.ingredientRepository = ingredientRepository;
+        this.tacoRepository = tacoRepository;
+    }
+
     /**
      * Populate model object
      *
      * @param model
      */
     @ModelAttribute
-    private void getIngridients(Model model) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beff", Ingredient.Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Dieced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEES),
-                new Ingredient("JAK", "Monterrey Jack", Ingredient.Type.CHEES),
-                new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
-        );
+    private void getIngredients(Model model) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredientRepository.findAll().forEach(ingredients::add);
         Ingredient.Type[] values = Ingredient.Type.values();
         for (Ingredient.Type value : values) {
             model.addAttribute(value.toString().toLowerCase(), filterByType(ingredients, value));
@@ -50,9 +51,14 @@ public class DesignTacoController {
      *
      * @return
      */
-    @ModelAttribute("taco")
+    @ModelAttribute(name = "taco")
     public Taco taco() {
         return new Taco();
+    }
+
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
     }
 
     /**
@@ -72,10 +78,12 @@ public class DesignTacoController {
      * @return in case of post this is mostly redirect view(URL-Relative url that should be open)
      */
     @PostMapping
-    public String saveTaco(@Valid @ModelAttribute Taco taco, Errors errors) {
+    public String saveTaco(@Valid @ModelAttribute Taco taco, Errors errors, @ModelAttribute Order order) {
         if (errors.hasErrors())
             return "homePage";
-        log.info("Processing taco " + taco);
+        Taco savedTaco = tacoRepository.save(taco);
+        order.addTaco(savedTaco);
+        log.info("Saved taco " + savedTaco);
         //on this point form is already submitted to @PostMapping("post/path"),so we call url
         return "redirect:/orders/current";//this is not view,it's redirect view or precisely url
     }

@@ -7,14 +7,20 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class Order {
+    private Long id;
+    private Date placedAt;
+
     @NotBlank(message = "name must not be empty")
     private String name;
     @NotBlank(message = "address must not be empty")
-    private String streetAddress;
+    private String street;
     @NotBlank(message = "city must not be empty")
     private String city;
     @NotBlank(message = "state must not be empty")
@@ -27,4 +33,9 @@ public class Order {
     private String expiration;
     @Digits(integer = 3, fraction = 0, message = "Must be 3 digits long")
     private String cvv;
+    private List<Taco> tacos = new ArrayList<>();
+
+    public void addTaco(Taco taco) {
+        tacos.add(taco);
+    }
 }
