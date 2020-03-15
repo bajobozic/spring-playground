@@ -25,7 +25,7 @@ create table if not exists Orders (
 	name varchar(50) not null,
 	street varchar(50) not null,
 	city varchar(50) not null,
-	state varchar(2) not null,
+	state varchar(10) not null,
 	zip varchar(10) not null,
 	creditCard varchar(16) not null,
 	expiration varchar(5) not null,

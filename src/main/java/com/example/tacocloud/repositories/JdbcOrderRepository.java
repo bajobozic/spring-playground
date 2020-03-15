@@ -57,7 +57,7 @@ public class JdbcOrderRepository implements OrderRepository {
         map.put("id", order.getId());
         map.put("placedAt", order.getPlacedAt());
         map.put("name", order.getName());
-        map.put("streetAddress", order.getStreetAddress());
+        map.put("street", order.getStreet());
         map.put("city", order.getCity());
         map.put("state", order.getState());
         map.put("zip", order.getZip());
@@ -73,7 +73,7 @@ public class JdbcOrderRepository implements OrderRepository {
         order.setId(rs.getLong("id"));
         order.setPlacedAt(rs.getDate("placedAt"));
         order.setName(rs.getString("name"));
-        order.setStreetAddress(rs.getString("streetAddress"));
+        order.setStreet(rs.getString("street"));
         order.setCity(rs.getString("city"));
         order.setState(rs.getString("state"));
         order.setZip(rs.getString("zip"));
