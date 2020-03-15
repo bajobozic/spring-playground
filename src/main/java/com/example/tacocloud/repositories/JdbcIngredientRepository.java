@@ -3,10 +3,12 @@ package com.example.tacocloud.repositories;
 import com.example.tacocloud.models.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class JdbcIngredientRepository implements IngredientRepository {
     private JdbcTemplate jdbcTemplate;
 
@@ -17,19 +19,19 @@ public class JdbcIngredientRepository implements IngredientRepository {
 
     @Override
     public Iterable<Ingredient> findAll() {
-        return jdbcTemplate.query("select id,name,type from Ingredients", this::mapRow);
+        return jdbcTemplate.query("select id, name, type from Ingredients", this::mapRow);
     }
 
     @Override
     public Ingredient findById(String id) {
-        return jdbcTemplate.queryForObject("select id,name,type from Ingredients where id=?", this::mapRow, id);
+        return jdbcTemplate.queryForObject("select id, name, type from Ingredients where id=?", this::mapRow, id);
     }
 
     private Ingredient mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Ingredient(
                 rs.getString("id"),
                 rs.getString("name"),
-                Ingredient.Type.valueOf(rs.getString("name"))
+                Ingredient.Type.valueOf(rs.getString("type"))
         );
     }
 }

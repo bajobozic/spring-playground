@@ -5,6 +5,7 @@ import com.example.tacocloud.models.Taco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class JdbcOrderRepository implements OrderRepository {
     private SimpleJdbcInsert orderInserter;
     private SimpleJdbcInsert orderTacoInserter;
@@ -19,7 +21,7 @@ public class JdbcOrderRepository implements OrderRepository {
     @Autowired
     public JdbcOrderRepository(JdbcTemplate jdbc) {
         orderInserter = new SimpleJdbcInsert(jdbc).withTableName("Orders").usingGeneratedKeyColumns("id");
-        orderTacoInserter = new SimpleJdbcInsert(jdbc).withTableName("Orders_Tacos");
+        orderTacoInserter = new SimpleJdbcInsert(jdbc).withTableName("OrdersTacos");
     }
 
     @Override
@@ -29,7 +31,7 @@ public class JdbcOrderRepository implements OrderRepository {
 
     @Override
     public Order findById(int id) {
-        return orderInserter.getJdbcTemplate().queryForObject("select * from Orders whene id=?", this::rowMapper, id);
+        return orderInserter.getJdbcTemplate().queryForObject("select * from Orders where id=?", this::rowMapper, id);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.example.tacocloud.models.Taco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class JdbcTacoRepository implements TacoRepository {
     private SimpleJdbcInsert tacoInserter;
     private SimpleJdbcInsert tacoIngredientInserter;
@@ -19,7 +21,7 @@ public class JdbcTacoRepository implements TacoRepository {
     @Autowired
     public JdbcTacoRepository(JdbcTemplate jdbc) {
         this.tacoInserter = new SimpleJdbcInsert(jdbc).withTableName("Tacos").usingGeneratedKeyColumns("id");
-        this.tacoIngredientInserter = new SimpleJdbcInsert(jdbc).withTableName("Tacos_Ingredients");
+        this.tacoIngredientInserter = new SimpleJdbcInsert(jdbc).withTableName("TacosIngredients");
     }
 
     @Override
