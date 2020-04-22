@@ -1,5 +1,7 @@
 package com.example.tacocloud.security;
 
+import com.example.tacocloud.security.providers.UsernamePasswordAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider;
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -19,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
+        auth.authenticationProvider(usernamePasswordAuthenticationProvider);
     }
 
     @Override
