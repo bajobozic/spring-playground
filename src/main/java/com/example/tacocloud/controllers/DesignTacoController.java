@@ -3,8 +3,8 @@ package com.example.tacocloud.controllers;
 import com.example.tacocloud.models.Ingredient;
 import com.example.tacocloud.models.Order;
 import com.example.tacocloud.models.Taco;
-import com.example.tacocloud.repositories.JdbcIngredientRepository;
-import com.example.tacocloud.repositories.JdbcTacoRepository;
+import com.example.tacocloud.repositories.IngredientRepository;
+import com.example.tacocloud.repositories.TacoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,13 +22,28 @@ import java.util.stream.Collectors;
 @RequestMapping("/design")
 @SessionAttributes(names = "order")
 public class DesignTacoController {
-    private JdbcIngredientRepository ingredientRepository;
-    private JdbcTacoRepository tacoRepository;
+    private IngredientRepository ingredientRepository;
+    private TacoRepository tacoRepository;
 
     @Autowired
-    public DesignTacoController(JdbcIngredientRepository ingredientRepository, JdbcTacoRepository tacoRepository) {
+    public DesignTacoController(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
         this.ingredientRepository = ingredientRepository;
         this.tacoRepository = tacoRepository;
+    }
+
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
+    }
+
+    /**
+     * this implicitly add Taco object with name taco to GET Model,must match -> th:object="${taco}" inside form POST
+     *
+     * @return
+     */
+    @ModelAttribute(name = "taco")
+    public Taco taco() {
+        return new Taco();
     }
 
     /**
@@ -46,20 +61,6 @@ public class DesignTacoController {
         }
     }
 
-    /**
-     * this implicitly add Taco object with name taco to GET Model,must match -> th:object="${taco}" inside form POST
-     *
-     * @return
-     */
-    @ModelAttribute(name = "taco")
-    public Taco taco() {
-        return new Taco();
-    }
-
-    @ModelAttribute(name = "order")
-    public Order order() {
-        return new Order();
-    }
 
     /**
      * Shows UI that usually have form inside(not always the case)
@@ -69,6 +70,7 @@ public class DesignTacoController {
      */
     @GetMapping
     public String showTacoForm(Model model) {
+        getIngredients(model);
         return "tacoPage";//this view must have Taco object with name "taco"(for GET method)
     }
 

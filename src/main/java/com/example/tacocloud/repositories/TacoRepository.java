@@ -1,11 +1,7 @@
 package com.example.tacocloud.repositories;
 
 import com.example.tacocloud.models.Taco;
+import org.springframework.data.repository.CrudRepository;
 
-public interface TacoRepository {
-    Iterable<Taco> findAll();
-
-    Taco findById(int id);
-
-    Taco save(Taco taco);
+public interface TacoRepository extends CrudRepository<Taco, Long> {
 }
