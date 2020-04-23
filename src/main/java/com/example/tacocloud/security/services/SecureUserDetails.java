@@ -15,6 +15,10 @@ public class SecureUserDetails implements UserDetails {
         this.user = user;
     }
 
+//    public User getUser() {
+//        return user;
+//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
