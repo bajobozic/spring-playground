@@ -5,6 +5,7 @@ import com.example.tacocloud.security.authentication.UsernamePasswordAuthenticat
 import com.example.tacocloud.security.services.SecureUserDetails;
 import com.example.tacocloud.security.services.SecureUserDetailsService;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,8 +27,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         SecureUserDetails userDetails = (SecureUserDetails) secureUserDetailsService.loadUserByUsername(username);
         if (passwordEncoder.matches(password, userDetails.getPassword()))
             return new UsernamePasswordAuthentication(null, userDetails.getUsername(), userDetails.getAuthorities());
-        else
-            throw new RuntimeException("Provider error");
+        throw new BadCredentialsException("Bad credentials error");
     }
 
     @Override
