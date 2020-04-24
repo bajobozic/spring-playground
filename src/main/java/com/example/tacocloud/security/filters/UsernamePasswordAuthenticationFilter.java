@@ -32,6 +32,6 @@ public class UsernamePasswordAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getRequestURI().contains("/login");
+        return !request.getServletPath().equals("/login");
     }
 }
