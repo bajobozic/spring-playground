@@ -2,10 +2,10 @@ package com.example.tacocloud.security;
 
 import com.example.tacocloud.security.filters.UsernamePasswordAuthenticationFilter;
 import com.example.tacocloud.security.providers.UsernamePasswordAuthenticationProvider;
+import com.example.tacocloud.security.services.SecureUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,26 +19,17 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
-
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Autowired
-    private UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider;
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    private SecureUserDetailsService secureUserDetailsService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(usernamePasswordAuthenticationProvider);
+        auth.authenticationProvider(new UsernamePasswordAuthenticationProvider(secureUserDetailsService, passwordEncoder()));
     }
 
     @Override
@@ -47,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterAt(usernamePasswordAuthenticationFilter, BasicAuthenticationFilter.class)
+                .addFilterAt(new UsernamePasswordAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
                 .authorizeRequests().antMatchers("/design").hasRole("USER")
                 .and().authorizeRequests().antMatchers("/**").permitAll()
                 .and()

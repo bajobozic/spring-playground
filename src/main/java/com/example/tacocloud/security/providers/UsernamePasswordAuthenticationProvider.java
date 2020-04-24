@@ -4,21 +4,16 @@ package com.example.tacocloud.security.providers;
 import com.example.tacocloud.security.authentication.UsernamePasswordAuthentication;
 import com.example.tacocloud.security.services.SecureUserDetails;
 import com.example.tacocloud.security.services.SecureUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
     private SecureUserDetailsService secureUserDetailsService;
-
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UsernamePasswordAuthenticationProvider(SecureUserDetailsService secureUserDetailsService, PasswordEncoder passwordEncoder) {
         this.secureUserDetailsService = secureUserDetailsService;
         this.passwordEncoder = passwordEncoder;
